@@ -1,16 +1,16 @@
 require 'pry'
 
 module Castor
-  class Configuration# < BasicObject
+  class Configuration
     def initialize(block)
       @values = {}
       instance_eval(&block)
     end
 
     def method_missing(name, *args, &block)
-      block = block || lambda {
+      block = Proc.new {
         default args.first
-      }
+      } unless block
 
       config_value = Castor::Configuration::Value.new(name, block)
       @values[name] = config_value
@@ -81,8 +81,6 @@ module Castor
       end
     end
 
-    class InvalidValueError < RuntimeError
-
-    end
+    class InvalidValueError < RuntimeError; end
   end
 end

@@ -3,16 +3,22 @@ require_relative "spec_helper"
 describe Castor do
   subject {
     Castor.configure do |config|
+
+      # Complete syntax
       config.toto do
         type Integer
         value_in 1..50
         default 42
       end
+
+      # Short syntax
+      config.titi "hello"
     end
   }
   
   context "default values" do
     its(:toto) { should == 42 }
+    its(:titi) { should == "hello" }
   end
 
   context "changing defaults" do
