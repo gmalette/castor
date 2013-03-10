@@ -24,6 +24,12 @@ module Castor
       end
     end
 
+    def call(attributes)
+      attributes.each do |key, value|
+        self.send key, value
+      end
+    end
+
     def selfclass
       class << self; self; end;
     end

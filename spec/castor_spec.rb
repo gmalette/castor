@@ -13,12 +13,18 @@ describe Castor do
 
       # Short syntax
       config.titi "hello"
+
+      # Mass-assign syntax
+      config.(:mass => :assign, :is => :working, :for => 100)
     end
   }
   
   context "default values" do
     its(:toto) { should == 42 }
     its(:titi) { should == "hello" }
+    its(:mass) { should == :assign }
+    its(:is)   { should == :working }
+    its(:for)  { should == 100 }
   end
 
   context "changing defaults" do
