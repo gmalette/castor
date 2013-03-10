@@ -16,6 +16,16 @@ describe Castor do
 
       # Mass-assign syntax
       config.(:mass => :assign, :is => :working, :for => 100)
+      
+      # Nested
+      config.more :nested => true do |nested_config|
+        nested_config.titi :toto
+      end
+
+      # Nested through new Castor
+      config.other_nested Castor.configure{|nested_config|
+        nested_config.is_nested true
+      }
     end
   }
   
@@ -25,6 +35,13 @@ describe Castor do
     its(:mass) { should == :assign }
     its(:is)   { should == :working }
     its(:for)  { should == 100 }
+  end
+
+  context "nested values" do
+    it "sets the correct default values" do
+      subject.more.titi.should == :toto
+      subject.other_nested.is_nested.should be_true
+    end
   end
 
   context "changing defaults" do

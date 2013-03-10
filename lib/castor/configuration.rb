@@ -8,20 +8,33 @@ module Castor
     end
 
     def method_missing(name, *args, &block)
-      block = Proc.new {
-        default args.first
-      } unless block
+      options = args.last.is_a?(::Hash) ? args.pop : {}
 
-      config_value = Castor::Configuration::Value.new(name, block)
+      config_value = nil
+
+      if options[:nested]
+        config_value = Castor::Configuration.new(block)
+
+        selfclass.define_method(name) do 
+          config_value
+        end
+      else
+        block = Proc.new {
+          default args.first
+        } unless block
+
+        config_value = Castor::Configuration::Value.new(name, block)
+
+        selfclass.define_method(name) do
+          config_value.value
+        end
+
+        selfclass.define_method("#{name}=") do |args|
+          config_value.value = args
+        end
+      end
+      
       @values[name] = config_value
-
-      selfclass.define_method(name) do
-        config_value.value
-      end
-
-      selfclass.define_method("#{name}=") do |args|
-        config_value.value = args
-      end
     end
 
     def call(attributes)
