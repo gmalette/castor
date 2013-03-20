@@ -26,6 +26,21 @@ describe Castor do
       config.other_nested Castor.configure{|nested_config|
         nested_config.is_nested true
       }
+
+      # Lazy Eval
+      config.time_now :lazy => lambda { Time.now }
+
+      # Lazy eval with block
+      config.lazy_increment do
+        type Fixnum
+        i = 0
+        default { i += 1 }
+      end
+
+      config.proc do
+        type Proc
+        default { 3 }
+      end
     end
   }
   
@@ -44,13 +59,26 @@ describe Castor do
     end
   end
 
+  context "lazy values" do
+    it "doesn't override procs" do
+      subject.proc.should be_a Proc
+    end
+  end
+
   context "changing defaults" do
-    context "to a valid value" do
+    context "normal case" do
       before {
         subject.toto = 11
       }
 
       its(:toto) { should == 11 }
+    end
+
+    context "lazy eval" do
+      it "evaluates the proc" do
+        subject.lazy_increment.should == 1
+        subject.lazy_increment.should == 2
+      end
     end
 
     context "to a value out of range" do

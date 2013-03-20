@@ -20,7 +20,7 @@ module Castor
         end
       else
         block = Proc.new {
-          default args.first
+          default (args.first || options.delete(:lazy))
         } unless block
 
         config_value = Castor::Configuration::Value.new(name, block)
@@ -31,6 +31,10 @@ module Castor
 
         selfclass.define_method("#{name}=") do |args|
           config_value.value = args
+        end
+
+        selfclass.define_method("#{name}!") do |arg|
+          config_value
         end
       end
       
@@ -49,8 +53,6 @@ module Castor
 
 
     class Value
-      attr_reader :value
-
       def initialize(name, block)
         @name = name
         instance_eval(&block)
@@ -61,6 +63,18 @@ module Castor
         if validate!(new_value)
           @value = new_value
         end
+      end
+
+      def value
+        lazy? ? lazy_value : @value
+      end
+
+      private 
+
+      def lazy_value
+        v = @value.call
+        validate!(v, true)
+        v
       end
 
       def desc(description)
@@ -79,11 +93,17 @@ module Castor
         end
       end
 
-      def default(default_value)
-        @default = default_value
+      def default(default_value = nil, &block)
+        @default = default_value || block
       end
 
-      def validate!(new_value)
+      def lazy?
+        (@value || @default).is_a?(Proc) && !(@types && @types.include?(Proc))
+      end
+
+      def validate!(new_value, jit = false)
+        return true if lazy? && !jit
+
         if (@possible_values && !@possible_values.include?(new_value))
           raise_validation_error(new_value, "Value must be included in #{@possible_values.to_s}")
         end
