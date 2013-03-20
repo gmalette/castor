@@ -97,12 +97,13 @@ module Castor
         @default = default_value || block
       end
 
-      def lazy?
-        (@value || @default).is_a?(Proc) && !(@types && @types.include?(Proc))
+      def lazy?(lazy_value = nil)
+        lazy_value = lazy_value || @value || @default
+        lazy_value.is_a?(Proc) && !(@types && @types.include?(Proc))
       end
 
       def validate!(new_value, jit = false)
-        return true if lazy? && !jit
+        return true if lazy?(new_value) && !jit
 
         if (@possible_values && !@possible_values.include?(new_value))
           raise_validation_error(new_value, "Value must be included in #{@possible_values.to_s}")

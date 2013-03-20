@@ -33,8 +33,7 @@ describe Castor do
       # Lazy eval with block
       config.lazy_increment do
         type Fixnum
-        i = 0
-        default { i += 1 }
+        default 3
       end
 
       config.proc do
@@ -75,6 +74,11 @@ describe Castor do
     end
 
     context "lazy eval" do
+      before {
+        i = 0
+        subject.lazy_increment = lambda { i += 1 }
+      }
+
       it "evaluates the proc" do
         subject.lazy_increment.should == 1
         subject.lazy_increment.should == 2
