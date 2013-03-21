@@ -2,9 +2,10 @@ require 'pry'
 
 module Castor
   class Configuration
+    include Enumerable
+
     def initialize(block)
       @values = {}
-      @initialized = false
       instance_eval(&block)
       @initialized = true
     end
@@ -54,6 +55,9 @@ module Castor
       class << self; self; end;
     end
 
+    def each(&block)
+      @values.each(&block)
+    end
 
     class Value
       def initialize(name, block)

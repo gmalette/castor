@@ -98,4 +98,6 @@ describe Castor do
       end
     end
   end
+
+  it "behaves like an enumerable"
 end
