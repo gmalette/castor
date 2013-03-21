@@ -4,12 +4,15 @@ module Castor
   class Configuration
     def initialize(block)
       @values = {}
+      @initialized = false
       instance_eval(&block)
+      @initialized = true
     end
 
     def method_missing(name, *args, &block)
-      options = args.last.is_a?(::Hash) ? args.pop : {}
+      return super(name, *args, block) if @initialized
 
+      options = args.last.is_a?(::Hash) ? args.pop : {}
       config_value = nil
 
       if options[:nested]

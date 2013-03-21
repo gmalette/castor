@@ -87,8 +87,14 @@ describe Castor do
     end
 
     context "to a value out of range" do
-      it "throws an exception" do
+      it "throws an error" do
         expect { subject.toto = 100 }.to raise_error Castor::Configuration::InvalidValueError
+      end
+    end
+
+    context "setting a value not specified" do
+      it "throws an error" do 
+        expect { subject.undefined_config_value(3) }.to raise_error NoMethodError
       end
     end
   end
