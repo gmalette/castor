@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Castor::VERSION
   gem.authors       = ["Guillaume Malette"]
   gem.email         = ["gmalette@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Castor is a configuration management gem. It can help write configuration apis for other gems}
+  gem.summary       = %q{Castor is a configuration management gem.}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
