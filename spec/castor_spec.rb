@@ -36,6 +36,7 @@ describe Castor do
         default 3
       end
 
+      # Expected procs
       config.proc do
         type Proc
         default { 3 }
@@ -59,7 +60,7 @@ describe Castor do
   end
 
   context "lazy values" do
-    it "doesn't override procs" do
+    it "doesn't override the behavior of expected procs" do
       subject.proc.should be_a Proc
     end
   end
