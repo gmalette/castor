@@ -132,10 +132,10 @@ configuration = Castor.configure do |config|
 end
 
 configuration.nested_config.value
-# => 3
+# => 5
 
 configuration.other_nested.other_value 
-# => "other_value"
+# => "value"
 
 configuration.other_nested = 3
 # => NoMethodError
