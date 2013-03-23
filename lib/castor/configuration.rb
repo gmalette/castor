@@ -10,7 +10,7 @@ module Castor
       @initialized = true
     end
 
-    def method_missing(name, *args, &block)
+    def def(name, *args, &block)
       return super(name, *args, block) if @initialized
 
       options = args.last.is_a?(::Hash) ? args.pop : {}
@@ -37,7 +37,7 @@ module Castor
           config_value.value = args
         end
 
-        selfclass.define_method("#{name}!") do |arg|
+        selfclass.define_method("#{name}!") do
           config_value
         end
       end
@@ -45,9 +45,9 @@ module Castor
       @values[name] = config_value
     end
 
-    def call(attributes)
+    def def_many(attributes)
       attributes.each do |key, value|
-        self.send key, value
+        self.def key, value
       end
     end
 

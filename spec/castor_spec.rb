@@ -5,39 +5,39 @@ describe Castor do
     Castor.configure do |config|
 
       # Complete syntax
-      config.toto do
+      config.def :toto do
         type Integer
         value_in 1..50
         default 42
       end
 
       # Short syntax
-      config.titi "hello"
+      config.def :titi, "hello"
 
       # Mass-assign syntax
-      config.(:mass => :assign, :is => :working, :for => 100)
+      config.def_many(:mass => :assign, :is => :working, :for => 100)
       
       # Nested
-      config.more :nested => true do |nested_config|
-        nested_config.titi :toto
+      config.def :more, :nested => true do |nested_config|
+        nested_config.def :titi, :toto
       end
 
       # Nested through new Castor
-      config.other_nested Castor.configure{|nested_config|
-        nested_config.is_nested true
+      config.def :other_nested, Castor.configure{|nested_config|
+        nested_config.def :is_nested, true
       }
 
       # Lazy Eval
-      config.time_now :lazy => lambda { Time.now }
+      config.def :time_now, :lazy => lambda { Time.now }
 
       # Lazy eval with block
-      config.lazy_increment do
+      config.def :lazy_increment do
         type Fixnum
         default 3
       end
 
       # Expected procs
-      config.proc do
+      config.def :proc do
         type Proc
         default { 3 }
       end
@@ -45,11 +45,12 @@ describe Castor do
   }
   
   context "default values" do
-    its(:toto) { should == 42 }
-    its(:titi) { should == "hello" }
-    its(:mass) { should == :assign }
-    its(:is)   { should == :working }
-    its(:for)  { should == 100 }
+    its(:toto)      { should == 42 }
+    its(:titi)      { should == "hello" }
+    its(:mass)      { should == :assign }
+    its(:is)        { should == :working }
+    its(:for)       { should == 100 }
+    its(:time_now)  { should be_a Time }
   end
 
   context "nested values" do
