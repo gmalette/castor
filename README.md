@@ -103,7 +103,7 @@ Because Castor lazy-evals lambdas, if what you need is an actual proc, you'll ha
 
 ### Nested config
 
-You can nest castor configurations. Castor will not create setters for the intermediate node. A user could therefore not overwrite it by accident.
+You can nest Castor configurations. Castor will not create setters for the intermediate node. A user could therefore not overwrite it by accident.
     
     configuration = Castor.configure do |config|
       config.nested_config :nested => true do |nested|
@@ -126,7 +126,7 @@ You can nest castor configurations. Castor will not create setters for the inter
 
 ### Going Meta
 
-It's possible to use `attribute!` method to get the `Castor::Configuration::Node` object. It's currently not very useful :(.
+It's possible to use `#{node}!` method to get the `Castor::Configuration::Node` object. It's currently not very useful :(.
 
     config.time_now!
     # => #<Castor::Configuration::Node:0x007ffdda363af0 ...
