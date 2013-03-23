@@ -27,7 +27,7 @@ module Castor
           default (args.first || options.delete(:lazy))
         } unless block
 
-        config_value = Castor::Configuration::Value.new(name, block)
+        config_value = Castor::Configuration::Node.new(name, block)
 
         selfclass.define_method(name) do
           config_value.value
@@ -59,7 +59,7 @@ module Castor
       @values.each(&block)
     end
 
-    class Value
+    class Node
       def initialize(name, block)
         @name = name
         instance_eval(&block)
