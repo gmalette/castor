@@ -98,6 +98,18 @@ describe Castor do
         expect { subject.undefined_config_value(3) }.to raise_error NoMethodError
       end
     end
+
+    context "by merging with a Hash" do
+      before {
+        subject.merge :toto => 21, :more => { :titi => 21 }
+      }
+
+      its(:toto) { should == 21 }
+
+      it "deep merges hashes" do
+        subject.more.titi.should == 21
+      end
+    end
   end
 
   it "behaves like an enumerable"

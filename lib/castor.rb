@@ -1,5 +1,6 @@
 require "castor/version"
 require "castor/configuration"
+require "castor/configuration/node"
 
 module Castor
   def self.configure(&block)
