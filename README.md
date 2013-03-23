@@ -64,7 +64,7 @@ If the validation fails, an `InvalidValueError` will be thrown
         default { Time.now }
       end
 
-      config.set :some_name, "a value"
+      config.def :some_name, "a value"
     end
 
     # You can always pass lambdas as values,
@@ -107,11 +107,11 @@ You can nest castor configurations. Castor will not create setters for the inter
     
     configuration = Castor.configure do |config|
       config.nested_config :nested => true do |nested|
-        nested.set :value, 5
+        nested.def :value, 5
       end
 
       config.other_nested Castor.configure{|nested|
-        nested.set :other_value, "value"
+        nested.def :other_value, "value"
       }
     end
 
