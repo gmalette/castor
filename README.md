@@ -1,6 +1,129 @@
 # Castor
 
-TODO: Write a gem description
+Castor is intended to help define third-party developer facing configurations for gems.
+
+## Usage
+
+The goal of Castor is to use it to define Gem configurations. As such you would probably do something like this:
+
+    class MyGem
+      def configure(&block)
+        @config = Castor.configure do |config|
+          config.def :name, :old_value
+        end
+        block.call(@config) if block
+      end
+    end
+
+    gem = MyGem.new.configure do |config|
+      config.name = :new_value
+    end
+
+There are many ways to define config values.
+
+### Basic use-case
+
+Setting config nodes this way will not use validation in any way, but makes it easy to quickly define nodes
+
+    config.def :name, :value
+
+### Mass assignment
+
+Self explanatory. As will the basic setter, this doesn't offer any validation.
+
+    config.def_many(:name => :value, :other_name => 'toto')
+
+### Adding validations
+
+    config.def :validated_symbol do 
+      type Symbol
+      default :value
+    end
+
+    config.def :validated_range do
+      value_in 1..50
+      default 1
+    end
+
+The config nodes `validated_symbol` and `validated_range` will now have validation.
+
+`validated_symbol` will only be accepted if new value is a Symbol
+
+`validated_range` will only accept values between 1 and 50
+
+If the validation fails, an `InvalidValueError` will be thrown
+
+### Lazy evaluations
+
+    configuration = Castor.configure do |config|
+      i = 0
+      config.def :next_id, :lazy => lambda { i += 1 }
+
+      config.def :time_now do
+        type Time
+        default { Time.now }
+      end
+
+      config.set :some_name, "a value"
+    end
+
+    # You can always pass lambdas as values,
+    # they will be lazy-evaluated when called
+    configuration.some_name = lambda { "some other value" }
+
+    configuration.next_id
+    # => 1
+    configuration.next_id
+    # => 2
+    configuration.time_now
+    # => 2013-03-22 23:32:03 -0400
+
+    configuration.some_name
+    # => "some other value"
+
+Castor will validate the return value and throw an `InvalidValueError` if it is invalid
+
+    config.time_now = lambda { 3 }
+    config.time_now
+    #=> InvalidValueError
+
+### Procs
+
+Because Castor lazy-evals lambdas, if what you need is an actual proc, you'll have to enforce the type
+
+    configuration = Castor.configure do |config|
+      config.def :a_proc do
+        type Proc
+        default { :some_value }
+      end
+    end
+
+    configuration.a_proc
+    # => #<Proc:0x007ffdda2edda0 ...
+
+### Nested config
+
+You can nest castor configurations. Castor will not create setters for the intermediate node. A user could therefore not overwrite it by accident.
+    
+    configuration = Castor.configure do |config|
+      config.nested_config :nested => true do |nested|
+        nested.set :value, 5
+      end
+
+      config.other_nested Castor.configure{|nested|
+        nested.set :other_value, "value"
+      }
+    end
+
+    configuration.nested_config.value
+    # => 3
+
+    configuration.other_nested.other_value 
+    # => "other_value"
+
+    configuration.other_nested = 3
+    # => NoMethodError
+
 
 ## Installation
 
@@ -15,10 +138,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install castor
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Contributing
 
