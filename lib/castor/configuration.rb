@@ -1,5 +1,3 @@
-require 'pry'
-
 module Castor
   class Configuration
     include Enumerable
