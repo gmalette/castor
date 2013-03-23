@@ -60,7 +60,7 @@ If the validation fails, an `InvalidValueError` will be thrown
       config.def :next_id, :lazy => lambda { i += 1 }
 
       config.def :time_now do
-        type Time
+        type Time, Date
         default { Time.now }
       end
 
@@ -124,6 +124,12 @@ You can nest castor configurations. Castor will not create setters for the inter
     configuration.other_nested = 3
     # => NoMethodError
 
+### Going Meta
+
+It's possible to use `attribute!` method to get the `Castor::Configuration::Node` object. It's currently not very useful :(.
+
+    config.time_now!
+    # => #<Castor::Configuration::Node:0x007ffdda363af0 ...
 
 ## Installation
 
