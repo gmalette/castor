@@ -27,15 +27,15 @@ module Castor
 
         config_value = Castor::Configuration::Node.new(name, block)
 
-        selfclass.define_method(name) do
+        selfclass.send(:define_method, name) do
           config_value.value
         end
 
-        selfclass.define_method("#{name}=") do |args|
+        selfclass.send(:define_method, "#{name}=") do |args|
           config_value.value = args
         end
 
-        selfclass.define_method("#{name}!") do
+        selfclass.send(:define_method, "#{name}!") do
           config_value
         end
       end
