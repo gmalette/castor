@@ -9,7 +9,7 @@ module Castor
     end
 
     def def(name, *args, &block)
-      return super(name, *args, block) if @initialized
+      raise AlreadyInitializedError.new if @initialized
 
       options = args.last.is_a?(::Hash) ? args.pop : {}
       config_value = nil
@@ -67,6 +67,7 @@ module Castor
       end
     end
 
+    class AlreadyInitializedError < RuntimeError; end
     class InvalidValueError < RuntimeError; end
   end
 end

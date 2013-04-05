@@ -112,5 +112,11 @@ describe Castor do
     end
   end
 
+  context "trying to adding new nodes" do
+    it "throws an exception" do
+      expect { subject.def(:new_node, 3) }.to raise_error Castor::Configuration::AlreadyInitializedError
+    end
+  end
+
   it "behaves like an enumerable"
 end
