@@ -1,5 +1,7 @@
 # Castor
 
+[![Build Status](https://travis-ci.org/gmalette/castor.png?branch=master)](https://travis-ci.org/gmalette/castor)
+
 Castor is intended to help define third-party developer facing configurations for gems.
 
 ## Usage
